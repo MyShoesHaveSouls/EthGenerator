@@ -18,8 +18,11 @@ def initialize_db():
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS addresses (
                 private_key TEXT PRIMARY KEY,
-                eth_address TEXT
+                eth_address TEXT UNIQUE
             )
+        ''')
+        cursor.execute('''
+            CREATE INDEX IF NOT EXISTS idx_eth_address ON addresses (eth_address)
         ''')
         conn.commit()
 
@@ -59,9 +62,22 @@ def process_private_key_range(start_key, end_key):
             eth_address = generate_eth_address(private_key)
             executor.submit(save_to_db, private_key, eth_address)
 
+def search_by_wallet_address(eth_address):
+    with sqlite3.connect(db_file) as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT private_key FROM addresses WHERE eth_address = ?
+        ''', (eth_address,))
+        result = cursor.fetchone()
+        if result:
+            return result[0]  # Return the private key
+        else:
+            return None
+
 if __name__ == '__main__':
     initialize_db()
     
+    # Process private key range
     start_key = int(input("Enter start private key (in hex, without 0x): "), 16)
     end_key = int(input("Enter end private key (in hex, without 0x): "), 16)
     
@@ -79,3 +95,11 @@ if __name__ == '__main__':
 
     for t in threads:
         t.join()
+
+    # Example search
+    address_to_search = input("Enter Ethereum address to search: ")
+    private_key = search_by_wallet_address(address_to_search)
+    if private_key:
+        print(f"Private key for address {address_to_search}: {private_key}")
+    else:
+        print("Address not found.")
