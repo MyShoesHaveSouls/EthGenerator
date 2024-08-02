@@ -1,61 +1,53 @@
-
 Memory updated
 Here are the step-by-step commands to set up a Python virtual environment, activate it, initialize CUDA, and install the necessary libraries on an Ubuntu environment. I'll also provide a requirements.txt file for easy installation.
 
 1. Create a Virtual Environment
 Open your terminal and navigate to the directory where you want to create your virtual environment.
 
-
 python3 -m venv myenv
 This creates a virtual environment named myenv.
-
-2. Activate the Virtual Environment
+Activate the Virtual Environment
 Activate the virtual environment with the following command:
-
-
 source myenv/bin/activate
+
 You should see (myenv) at the beginning of your terminal prompt, indicating that the virtual environment is active.
 
 3. Install Required Libraries
 Create a requirements.txt file with the following content:
 
-
-web3
-numpy
-numba
-Install the required libraries using the requirements.txt file:
-
+import numpy as np
+import sqlite3
+from numba import cuda
+import ecdsa
+import hashlib
+import math
+import memcache
 
 pip install -r requirements.txt
 
+
 4. Initialize CUDA
 Ensure that you have CUDA and the necessary NVIDIA drivers installed. Follow these steps to install CUDA:
+a. Install NVIDIA Driver Install the NVIDIA driver suitable for your GPU. You can find the right driver on the NVIDIA website.
 
-a. Install NVIDIA Driver
-Install the NVIDIA driver suitable for your GPU. You can find the right driver on the NVIDIA website.
+You can install the driver using: 
+sudo apt update✔
+sudo apt install nvidia-driver-<version>✔
+Replace <version> with the appropriate version number✔
 
-You can install the driver using:
-
-
-sudo apt update
-sudo apt install nvidia-driver-<version>
-Replace <version> with the appropriate version number.
-
-b. Install CUDA Toolkit
-Download the CUDA Toolkit from NVIDIA's official site.
+b. Install CUDA Toolkit✔
+Download the CUDA Toolkit from NVIDIA's official sit
 
 Install CUDA Toolkit:
-
-
-sudo dpkg -i cuda-repo-<distro>_<version>_amd64.deb
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7fa2af80
-sudo apt-get update
-sudo apt-get install cuda
+sudo dpkg -i cuda-repo-<distro>_<version>_amd64.deb✔
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7fa2af80✔
+sudo apt-get update✔
+sudo apt-get install cuda✔
 Replace <distro> with your Ubuntu distribution (e.g., ubuntu2204) and <version> with the CUDA version (e.g., 11.8.0).
 
-Add CUDA to PATH:
+Add CUDA to PATH:✔
 
-Add the following lines to your ~/.bashrc or ~/.zshrc file:
+Add the following lines to your ~/.bashrc or ~/.zshrc file:✔
 
 bash
 Copy code
@@ -63,11 +55,9 @@ export PATH=/usr/local/cuda/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 Then, reload the shell configuration:
 
-
 source ~/.bashrc
 5. Verify CUDA Installation
 You can verify the CUDA installation with the following command:
-
 
 nvcc --version
 You should see output indicating the CUDA version installed.
